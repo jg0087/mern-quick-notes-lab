@@ -26,8 +26,7 @@ export default class SignUpForm extends Component {
       // method will resolve to the user object included
       // in the payload of the JSON Web Token (JWT)
       const user = await signUp(formData);
-      // Baby step!
-      console.log(user);
+      this.props.setUser(user)
     } catch {
       // An error occurred
       // Probably due to a duplicate email
@@ -49,7 +48,7 @@ export default class SignUpForm extends Component {
             <input type="password" name="password" value={this.state.password} onChange={this.handleChange} required />
             <label>Confirm</label>
             <input type="password" name="confirm" value={this.state.confirm} onChange={this.handleChange} required />
-            <button type="submit" disabled={disable}>SIGN UP</button>
+            <button type="submit" >SIGN UP</button>
           </form>
         </div>
         <p className="error-message">&nbsp;{this.state.error}</p>
