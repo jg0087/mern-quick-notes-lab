@@ -1,15 +1,19 @@
 const jwt = require('jsonwebtoken');
-const User = require('../../models/user');
 const bcrypt = require('bcrypt');
-require('dotenv').config
+const User = require('../../models/user');
+
 module.exports = {
   create,
   login,
   checkToken
 };
 
+function checkToken(req, res) {
+  console.log('req.user', req.user);
+  res.json(req.exp);
+}
+
 async function create(req, res) {
-  console.log(req.body)
   try {
     // Add the user to the db
     const user = await User.create(req.body);
@@ -19,26 +23,19 @@ async function create(req, res) {
     res.status(400).json(err);
   }
 }
+
 async function login(req, res) {
   try {
-    const user = await User.findOne({ email: req.body.email })
-    if (!user) throw new Errow()
-    const match = await bcrypt.compare(req.body.password, user.password)
-    if (!match) throw new Error()
-    const token = createJWT(user)
-  res.json(token)
+    const user = await User.findOne({email: req.body.email});
+    if (!user) throw new Error();
+    const match = await bcrypt.compare(req.body.password, user.password);
+    if (!match) throw new Error();
+    const token = createJWT(user);
+    res.json(token);
   } catch (err) {
-    res.status(400).json('Bad Credentials')
+    res.status(400).json('Bad Credentials');
   }
-
 }
-function checkToken(req, res) {
-  // req.user will always be there for you when a token is sent
-  console.log('req.user', req.user);
-  res.json(req.exp);
-}
-
-
 
 /*--- Helper Functions --*/
 
